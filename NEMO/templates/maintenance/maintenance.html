@@ -58,6 +58,7 @@
                                 <a href="{% url 'maintenance' sort_by='creation_time' %}">Created</a>
                             </th>
                             <th>Description</th>
+                            <th title="Number of users affected by this task">Affected</th>
                         </tr>
                     </thead>
                     {% for task in pending_tasks %}
@@ -81,6 +82,11 @@
                             </td>
                             <td>{{ task.creation_time|naturaltime }}</td>
                             <td>{{ task.problem_description }}</td>
+                            <td>
+                                {% if task.affected_user_count %}
+                                    <span class="badge">{{ task.affected_user_count }}</span>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
