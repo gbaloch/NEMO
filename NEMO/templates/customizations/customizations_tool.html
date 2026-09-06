@@ -266,7 +266,7 @@
         <div class="form-group">
             <label class="control-label col-sm-4 col-md-3">Who can add updates</label>
             <div class="col-sm-8 col-md-9">
-                <div class="radio">
+                <div class="radio" role="group" aria-labelledby="tool_problem_update_permission">
                     <label>
                         <input type="radio"
                                name="tool_problem_update_permission"
@@ -274,8 +274,7 @@
                                value="creator">
                         Only the task creator
                     </label>
-                </div>
-                <div class="radio">
+                    <br>
                     <label>
                         <input type="radio"
                                name="tool_problem_update_permission"
@@ -283,8 +282,7 @@
                                value="staff">
                         The task creator, staff, and the tool's owner/backup owners
                     </label>
-                </div>
-                <div class="radio">
+                    <br>
                     <label>
                         <input type="radio"
                                name="tool_problem_update_permission"
