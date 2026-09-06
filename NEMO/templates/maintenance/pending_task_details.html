@@ -205,7 +205,7 @@
             <h4>Problem description</h4>
             {{ task.problem_description|linebreaksbr }}
             <p>
-                {% if task.affected_user_count %}
+                {% if task.affected_user_count and customizations|get_item:"tool_task_reactions_show_affected_users_to_staff" == "enabled" %}
                     <p>
                         <h4>Users affected ({{ task.affected_user_count }})</h4>
                         {% for affected_user in task.affected_users %}

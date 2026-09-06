@@ -291,6 +291,7 @@
                             <span class="glyphicon glyphicon-chevron-{% if tool_control_show_task_details %}down{% else %}right{% endif %} pull-left chevron"></span>
                         </a>
                         <div class="media-body">
+                            {% if customizations|get_item:"tool_task_reactions_enabled" == "enabled" %}
                             <span class="pull-right" style="margin-left:10px">
                                 <a href="javascript:void(0)"
                                    id="task_affected_{{ t.id }}"
@@ -301,6 +302,7 @@
                                     Me too (<span id="task_affected_count_{{ t.id }}">{{ t.affected_user_count }}</span>)
                                 </a>
                             </span>
+                            {% endif %}
                             {% if t.problem_category %}<span class="media-heading">{{ t.problem_category }}</span>{% endif %}
                             <span class="media-middle">{{ t.problem_description }}</span>
                             {% if t.estimated_resolution_time %}
@@ -366,6 +368,7 @@
                             </a>
                         {% endif %}
                         <div class="media-body">
+                            {% if customizations|get_item:"tool_comment_reactions_enabled" == "enabled" %}
                             <span class="pull-right" style="margin-left:10px">
                                 <a href="javascript:void(0)"
                                    id="comment_affected_{{ c.id }}"
@@ -376,6 +379,7 @@
                                     (<span id="comment_affected_count_{{ c.id }}">{{ c.affected_user_count }}</span>)
                                 </a>
                             </span>
+                            {% endif %}
                             <span class="media-middle">{{ c.content|linebreaksbr }}</span>
                             <span class="media-bottom">{{ c.author }} wrote this comment on {{ c.creation_date }}</span>
                             {% if user.id == c.author.id or user|is_staff_on_tool:tool %}
@@ -416,6 +420,7 @@
                                             </a>
                                         {% endif %}
                                         <div class="media-body">
+                                            {% if customizations|get_item:"tool_comment_reactions_enabled" == "enabled" %}
                                             <span class="pull-right" style="margin-left:10px">
                                                 <a href="javascript:void(0)"
                                                    id="comment_affected_{{ c.id }}"
@@ -426,6 +431,7 @@
                                                     (<span id="comment_affected_count_{{ c.id }}">{{ c.affected_user_count }}</span>)
                                                 </a>
                                             </span>
+                                            {% endif %}
                                             <span class="media-middle">{{ c.content|linebreaksbr }}</span>
                                             <span class="media-bottom">{{ c.author }} wrote this comment on {{ c.creation_date }}</span>
                                             {% if user.id == c.author.id or user|is_staff_on_tool:tool %}

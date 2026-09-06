@@ -15,6 +15,7 @@
                  {% if user.is_staff %}style="cursor:pointer" onclick="location.href='{% url 'update_safety_issue' ticket.id %}'"{% endif %}>
                 <div class="panel-body">
                     <div class="form-group">
+                        {% if customizations|get_item:"safety_issue_reactions_enabled" == "enabled" %}
                         <span class="pull-right" style="margin-left:10px" onclick="event.stopPropagation()">
                             <a href="javascript:void(0)"
                                id="safety_issue_affected_{{ ticket.id }}"
@@ -25,6 +26,7 @@
                                 Me too (<span id="safety_issue_affected_count_{{ ticket.id }}">{{ ticket.affected_user_count }}</span>)
                             </a>
                         </span>
+                        {% endif %}
                         <h4>
                             {% if ticket.id in notifications %}<span class="badge active" style="vertical-align:middle;">New</span>{% endif %}
                             Concern
@@ -48,7 +50,7 @@
                             Reported anonymously on {{ ticket.creation_time }}
                             <br>
                         {% endif %}
-                        {% if user.is_staff and ticket.affected_user_count %}
+                        {% if user.is_staff and ticket.affected_user_count and customizations|get_item:"safety_issue_reactions_show_affected_users_to_staff" == "enabled" %}
                             Users also concerned: {% for u in ticket.affected_users %}{{ u.get_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
                             <br>
                         {% endif %}

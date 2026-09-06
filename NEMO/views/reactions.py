@@ -13,14 +13,36 @@ from NEMO.models import (
     UserReaction,
     set_user_reaction,
 )
+from NEMO.views.customization import KnowledgeBaseCustomization, SafetyCustomization, ToolCustomization
 
-# Models that support user reactions, and the permission check required for a user to react to an instance of them.
+# Models that support user reactions: the model class, the permission check required for a user to react to an
+# instance of it, and the customization check for whether reactions are enabled for this content type at all.
 REACTABLE_MODELS = {
-    "task": (Task, lambda user, obj: True),
-    "safetyissue": (SafetyIssue, lambda user, obj: True),
-    "comment": (Comment, lambda user, obj: True),
-    "userknowledgebaseitem": (UserKnowledgeBaseItem, lambda user, obj: True),
-    "staffknowledgebaseitem": (StaffKnowledgeBaseItem, lambda user, obj: user.is_any_part_of_staff),
+    "task": (
+        Task,
+        lambda user, obj: True,
+        lambda: ToolCustomization.get_bool("tool_task_reactions_enabled"),
+    ),
+    "safetyissue": (
+        SafetyIssue,
+        lambda user, obj: True,
+        lambda: SafetyCustomization.get_bool("safety_issue_reactions_enabled"),
+    ),
+    "comment": (
+        Comment,
+        lambda user, obj: True,
+        lambda: ToolCustomization.get_bool("tool_comment_reactions_enabled"),
+    ),
+    "userknowledgebaseitem": (
+        UserKnowledgeBaseItem,
+        lambda user, obj: True,
+        lambda: KnowledgeBaseCustomization.get_bool("knowledge_base_user_reactions_enabled"),
+    ),
+    "staffknowledgebaseitem": (
+        StaffKnowledgeBaseItem,
+        lambda user, obj: user.is_any_part_of_staff,
+        lambda: KnowledgeBaseCustomization.get_bool("knowledge_base_staff_reactions_enabled"),
+    ),
 }
 
 
@@ -30,7 +52,9 @@ def toggle_reaction(request, model_name: str, object_id: int):
     model_name = model_name.lower()
     if model_name not in REACTABLE_MODELS:
         return HttpResponseBadRequest("Unsupported content type for reactions.")
-    model_class, is_authorized = REACTABLE_MODELS[model_name]
+    model_class, is_authorized, is_enabled = REACTABLE_MODELS[model_name]
+    if not is_enabled():
+        return HttpResponseBadRequest("Reactions are disabled for this type of content.")
     obj = get_object_or_404(model_class, id=object_id)
     user: User = request.user
     if not is_authorized(user, obj):
